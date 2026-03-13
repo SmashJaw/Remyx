@@ -8,13 +8,13 @@ A feature-rich WYSIWYG editor for React with a configurable toolbar, markdown su
 
 Rich text editing with headings, tables, lists, blockquotes, and a full-featured toolbar:
 
-![Remyx Editor — Light Theme](../../docs/screenshots/editor-light-theme.png)
+![Remyx Editor — Light Theme](screenshots/editor-light-theme.png)
 
 ### Dark Theme (Ocean)
 
 Built-in dark mode with multiple theme presets (Ocean, Forest, Sunset, Rose):
 
-![Remyx Editor — Dark Ocean Theme](../../docs/screenshots/editor-dark-ocean.png)
+![Remyx Editor — Dark Ocean Theme](screenshots/editor-dark-ocean.png)
 
 ## Installation
 
@@ -25,17 +25,17 @@ npm install remyx-editor
 Import the stylesheet in your app entry point:
 
 ```js
-import 'remyx-editor/style.css'
+import 'remyx-editor/style.css';
 ```
 
 ## Quick Start
 
 ```jsx
-import { RemyxEditor } from 'remyx-editor'
-import 'remyx-editor/style.css'
+import { RemyxEditor } from 'remyx-editor';
+import 'remyx-editor/style.css';
 
 function App() {
-  const [content, setContent] = useState('')
+  const [content, setContent] = useState('');
 
   return (
     <RemyxEditor
@@ -44,42 +44,122 @@ function App() {
       placeholder="Start typing..."
       height={400}
     />
-  )
+  );
 }
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `string` | — | Controlled content (HTML or Markdown) |
-| `defaultValue` | `string` | — | Initial content for uncontrolled mode |
-| `onChange` | `(content: string) => void` | — | Called when content changes |
-| `outputFormat` | `'html' \| 'markdown'` | `'html'` | Output format for `onChange` |
-| `toolbar` | `string[][]` | Full toolbar | Custom toolbar configuration (see below) |
-| `theme` | `'light' \| 'dark'` | `'light'` | Editor theme |
-| `placeholder` | `string` | `''` | Placeholder text |
-| `height` | `number` | `300` | Editor height in px |
-| `minHeight` | `number` | — | Minimum height override |
-| `maxHeight` | `number` | — | Maximum height (enables scrolling) |
-| `readOnly` | `boolean` | `false` | Disable editing |
-| `fonts` | `string[]` | Built-in list | Custom font family options (replaces defaults) |
-| `googleFonts` | `string[]` | — | Google Font families to auto-load and add to the font dropdown |
-| `statusBar` | `'bottom' \| 'top' \| 'popup' \| false` | `'bottom'` | Word/character count display position |
-| `customTheme` | `object` | — | CSS variable overrides for custom theming (see Custom Themes) |
-| `toolbarItemTheme` | `object` | — | Per-item toolbar styling overrides (see Per-Item Toolbar Theming) |
-| `floatingToolbar` | `boolean` | `true` | Show floating toolbar on text selection |
-| `contextMenu` | `boolean` | `true` | Show right-click context menu |
-| `plugins` | `Plugin[]` | — | Custom plugins |
-| `uploadHandler` | `(file: File) => Promise<string>` | — | Upload handler for images and file attachments (see File Uploads) |
-| `shortcuts` | `object` | — | Custom keyboard shortcut overrides |
-| `sanitize` | `object` | — | HTML sanitization options |
-| `attachTo` | `React.RefObject` | — | Attach editor to an existing element |
-| `onReady` | `(engine) => void` | — | Called when the editor is initialized |
-| `onFocus` | `() => void` | — | Called on editor focus |
-| `onBlur` | `() => void` | — | Called on editor blur |
-| `className` | `string` | `''` | CSS class for the editor wrapper |
-| `style` | `object` | — | Inline styles for the editor wrapper |
+| Prop               | Type                                    | Default       | Description                                                       |
+| ------------------ | --------------------------------------- | ------------- | ----------------------------------------------------------------- |
+| `config`           | `string`                                | —             | Named editor config from `defineConfig()` (see Config File)       |
+| `value`            | `string`                                | —             | Controlled content (HTML or Markdown)                             |
+| `defaultValue`     | `string`                                | —             | Initial content for uncontrolled mode                             |
+| `onChange`         | `(content: string) => void`             | —             | Called when content changes                                       |
+| `outputFormat`     | `'html' \| 'markdown'`                  | `'html'`      | Output format for `onChange`                                      |
+| `toolbar`          | `string[][]`                            | Full toolbar  | Custom toolbar configuration (see below)                          |
+| `menuBar`          | `boolean \| MenuBarConfig[]`            | —             | Enable application-style menu bar (see Menu Bar)                  |
+| `theme`            | `'light' \| 'dark'`                     | `'light'`     | Editor theme                                                      |
+| `placeholder`      | `string`                                | `''`          | Placeholder text                                                  |
+| `height`           | `number`                                | `300`         | Editor height in px                                               |
+| `minHeight`        | `number`                                | —             | Minimum height override                                           |
+| `maxHeight`        | `number`                                | —             | Maximum height (enables scrolling)                                |
+| `readOnly`         | `boolean`                               | `false`       | Disable editing                                                   |
+| `fonts`            | `string[]`                              | Built-in list | Custom font family options (replaces defaults)                    |
+| `googleFonts`      | `string[]`                              | —             | Google Font families to auto-load and add to the font dropdown    |
+| `statusBar`        | `'bottom' \| 'top' \| 'popup' \| false` | `'bottom'`    | Word/character count display position                             |
+| `customTheme`      | `object`                                | —             | CSS variable overrides for custom theming (see Custom Themes)     |
+| `toolbarItemTheme` | `object`                                | —             | Per-item toolbar styling overrides (see Per-Item Toolbar Theming) |
+| `floatingToolbar`  | `boolean`                               | `true`        | Show floating toolbar on text selection                           |
+| `contextMenu`      | `boolean`                               | `true`        | Show right-click context menu                                     |
+| `plugins`          | `Plugin[]`                              | —             | Custom plugins                                                    |
+| `uploadHandler`    | `(file: File) => Promise<string>`       | —             | Upload handler for images and file attachments (see File Uploads) |
+| `shortcuts`        | `object`                                | —             | Custom keyboard shortcut overrides                                |
+| `sanitize`         | `object`                                | —             | HTML sanitization options                                         |
+| `attachTo`         | `React.RefObject`                       | —             | Attach editor to an existing element                              |
+| `onReady`          | `(engine) => void`                      | —             | Called when the editor is initialized                             |
+| `onFocus`          | `() => void`                            | —             | Called on editor focus                                            |
+| `onBlur`           | `() => void`                            | —             | Called on editor blur                                             |
+| `className`        | `string`                                | `''`          | CSS class for the editor wrapper                                  |
+| `style`            | `object`                                | —             | Inline styles for the editor wrapper                              |
+
+## Config File
+
+For projects with multiple editors or shared defaults, you can define a centralized configuration file instead of repeating props on every `<RemyxEditor />` instance.
+
+### Setup
+
+Create a config file (e.g. `remyx.config.js`) at your project root:
+
+```js
+import { defineConfig } from 'remyx-editor';
+
+export default defineConfig({
+  // Default config applied to all editors
+  theme: 'dark',
+  placeholder: 'Start writing...',
+  height: 400,
+
+  // Named editor configurations
+  editors: {
+    minimal: {
+      toolbar: [['bold', 'italic', 'underline'], ['link']],
+      floatingToolbar: false,
+      height: 200,
+    },
+    comments: {
+      toolbar: [
+        ['bold', 'italic', 'strikethrough'],
+        ['orderedList', 'unorderedList'],
+        ['link'],
+      ],
+      statusBar: false,
+      height: 150,
+      placeholder: 'Write a comment...',
+    },
+  },
+});
+```
+
+### Usage
+
+Wrap your app (or a section of it) with `RemyxConfigProvider` and pass the imported config:
+
+```jsx
+import { RemyxEditor, RemyxConfigProvider } from 'remyx-editor';
+import config from './remyx.config.js';
+
+function App() {
+  return (
+    <RemyxConfigProvider config={config}>
+      {/* Uses default config */}
+      <RemyxEditor />
+
+      {/* Uses the "minimal" named config */}
+      <RemyxEditor config="minimal" />
+
+      {/* Uses the "comments" named config */}
+      <RemyxEditor config="comments" />
+
+      {/* Named config + prop override (prop wins) */}
+      <RemyxEditor config="minimal" theme="light" />
+    </RemyxConfigProvider>
+  );
+}
+```
+
+### Config Resolution Priority
+
+When both a config file and component props are present, values are merged with this priority (highest wins):
+
+1. **Component props** — explicitly passed props always take precedence
+2. **Named editor config** — values from `editors.minimal`, `editors.comments`, etc.
+3. **Default config** — top-level keys in the config file
+4. **Built-in defaults** — the component's own defaults (e.g. `theme: 'light'`, `height: 300`)
+
+### Without a Provider
+
+Editors work exactly the same without a `RemyxConfigProvider` — all props behave as before. The provider is optional and additive.
 
 ## Toolbar Configuration
 
@@ -96,10 +176,24 @@ The default toolbar includes all available items grouped by function:
   ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify'],
   ['orderedList', 'unorderedList', 'taskList'],
   ['outdent', 'indent'],
-  ['link', 'image', 'table', 'embedMedia', 'blockquote', 'codeBlock', 'horizontalRule'],
+  [
+    'link',
+    'image',
+    'table',
+    'embedMedia',
+    'blockquote',
+    'codeBlock',
+    'horizontalRule',
+  ],
   ['subscript', 'superscript'],
-  ['findReplace', 'toggleMarkdown', 'sourceMode', 'export', 'fullscreen'],
-]
+  [
+    'findReplace',
+    'toggleMarkdown',
+    'sourceMode',
+    'export',
+    'fullscreen',
+  ],
+];
 ```
 
 Each inner array is a group separated visually by a divider in the toolbar.
@@ -159,19 +253,35 @@ const toolbar = removeToolbarItems(DEFAULT_TOOLBAR, ['image', 'table', 'embedMed
 Add items to a toolbar config:
 
 ```jsx
-import { RemyxEditor, TOOLBAR_PRESETS, addToolbarItems } from 'remyx-editor'
+import {
+  RemyxEditor,
+  TOOLBAR_PRESETS,
+  addToolbarItems,
+} from 'remyx-editor';
 
 // Append as a new group
-const toolbar = addToolbarItems(TOOLBAR_PRESETS.minimal, ['fullscreen'])
+const toolbar = addToolbarItems(TOOLBAR_PRESETS.minimal, [
+  'fullscreen',
+]);
 
 // Add to an existing group (by index, -1 = last)
-const toolbar = addToolbarItems(TOOLBAR_PRESETS.minimal, 'fullscreen', { group: -1 })
+const toolbar = addToolbarItems(
+  TOOLBAR_PRESETS.minimal,
+  'fullscreen',
+  { group: -1 },
+);
 
 // Insert after a specific item
-const toolbar = addToolbarItems(TOOLBAR_PRESETS.minimal, 'taskList', { after: 'unorderedList' })
+const toolbar = addToolbarItems(TOOLBAR_PRESETS.minimal, 'taskList', {
+  after: 'unorderedList',
+});
 
 // Insert before a specific item
-const toolbar = addToolbarItems(TOOLBAR_PRESETS.minimal, 'strikethrough', { before: 'underline' })
+const toolbar = addToolbarItems(
+  TOOLBAR_PRESETS.minimal,
+  'strikethrough',
+  { before: 'underline' },
+);
 ```
 
 #### `createToolbar(items)`
@@ -202,44 +312,282 @@ const toolbar = createToolbar([
 
 ### Available Toolbar Items
 
-| Item | Type | Description |
-|------|------|-------------|
-| `undo` | Button | Undo last action |
-| `redo` | Button | Redo last action |
-| `headings` | Dropdown | Block type selector (Normal, H1–H6) |
-| `fontFamily` | Dropdown | Font family selector |
-| `fontSize` | Dropdown | Font size selector |
-| `bold` | Button | Bold text |
-| `italic` | Button | Italic text |
-| `underline` | Button | Underline text |
-| `strikethrough` | Button | Strikethrough text |
-| `subscript` | Button | Subscript text |
-| `superscript` | Button | Superscript text |
-| `foreColor` | Color Picker | Text color |
-| `backColor` | Color Picker | Background/highlight color |
-| `alignLeft` | Button | Align left |
-| `alignCenter` | Button | Align center |
-| `alignRight` | Button | Align right |
-| `alignJustify` | Button | Justify text |
-| `orderedList` | Button | Numbered list |
-| `unorderedList` | Button | Bulleted list |
-| `taskList` | Button | Task/checkbox list |
-| `indent` | Button | Increase indent |
-| `outdent` | Button | Decrease indent |
-| `link` | Button | Insert/edit link (opens modal) |
-| `image` | Button | Insert image (opens modal) |
-| `attachment` | Button | Attach file (opens modal) |
-| `importDocument` | Button | Import document — PDF, DOCX, MD, CSV, etc. (opens modal) |
-| `table` | Button | Insert table (opens picker) |
-| `embedMedia` | Button | Embed video/media (opens modal) |
-| `blockquote` | Button | Block quote |
-| `codeBlock` | Button | Code block |
-| `horizontalRule` | Button | Horizontal divider |
-| `findReplace` | Button | Find and replace (opens panel) |
-| `toggleMarkdown` | Button | Toggle markdown editing mode |
-| `sourceMode` | Button | View/edit HTML source |
-| `export` | Button | Export document (PDF, Markdown, DOCX) |
-| `fullscreen` | Button | Toggle fullscreen mode |
+| Item             | Type         | Description                                              |
+| ---------------- | ------------ | -------------------------------------------------------- |
+| `undo`           | Button       | Undo last action                                         |
+| `redo`           | Button       | Redo last action                                         |
+| `headings`       | Dropdown     | Block type selector (Normal, H1–H6)                      |
+| `fontFamily`     | Dropdown     | Font family selector                                     |
+| `fontSize`       | Dropdown     | Font size selector                                       |
+| `bold`           | Button       | Bold text                                                |
+| `italic`         | Button       | Italic text                                              |
+| `underline`      | Button       | Underline text                                           |
+| `strikethrough`  | Button       | Strikethrough text                                       |
+| `subscript`      | Button       | Subscript text                                           |
+| `superscript`    | Button       | Superscript text                                         |
+| `foreColor`      | Color Picker | Text color                                               |
+| `backColor`      | Color Picker | Background/highlight color                               |
+| `alignLeft`      | Button       | Align left                                               |
+| `alignCenter`    | Button       | Align center                                             |
+| `alignRight`     | Button       | Align right                                              |
+| `alignJustify`   | Button       | Justify text                                             |
+| `orderedList`    | Button       | Numbered list                                            |
+| `unorderedList`  | Button       | Bulleted list                                            |
+| `taskList`       | Button       | Task/checkbox list                                       |
+| `indent`         | Button       | Increase indent                                          |
+| `outdent`        | Button       | Decrease indent                                          |
+| `link`           | Button       | Insert/edit link (opens modal)                           |
+| `image`          | Button       | Insert image (opens modal)                               |
+| `attachment`     | Button       | Attach file (opens modal)                                |
+| `importDocument` | Button       | Import document — PDF, DOCX, MD, CSV, etc. (opens modal) |
+| `table`          | Button       | Insert table (opens picker)                              |
+| `embedMedia`     | Button       | Embed video/media (opens modal)                          |
+| `blockquote`     | Button       | Block quote                                              |
+| `codeBlock`      | Button       | Code block                                               |
+| `horizontalRule` | Button       | Horizontal divider                                       |
+| `findReplace`    | Button       | Find and replace (opens panel)                           |
+| `toggleMarkdown` | Button       | Toggle markdown editing mode                             |
+| `sourceMode`     | Button       | View/edit HTML source                                    |
+| `export`         | Button       | Export document (PDF, Markdown, DOCX)                    |
+| `fullscreen`     | Button       | Toggle fullscreen mode                                   |
+
+## Menu Bar
+
+Add an application-style menu bar (File, Edit, View, Insert, Format) above the toolbar. When enabled, items that appear in the menu bar are automatically removed from the toolbar to avoid duplication. Each menu item displays its icon, label, and keyboard shortcut (if available), and toggle-style commands (bold, italic, fullscreen, etc.) show their active state with a visual indicator.
+
+### Enable with Defaults
+
+Pass `menuBar={true}` to use the built-in default menu bar:
+
+```jsx
+<RemyxEditor menuBar={true} />
+```
+
+The default menu bar includes:
+
+| Menu       | Items                                                                                      |
+| ---------- | ------------------------------------------------------------------------------------------ |
+| **File**   | Import Document, Export Document                                                           |
+| **Edit**   | Undo, Redo, Find & Replace                                                                |
+| **View**   | Fullscreen, Toggle Markdown, Source Mode                                                   |
+| **Insert** | Link, Image, Table, Attachment, Embed Media, Blockquote, Code Block, Horizontal Rule       |
+| **Format** | Bold, Italic, Underline, Strikethrough, Subscript, Superscript, Alignment ▸, Lists, Colors |
+
+### Default Menu Bar Structure
+
+The full `DEFAULT_MENU_BAR` config is exported so you can use it as a starting point for customization:
+
+```js
+import { DEFAULT_MENU_BAR } from 'remyx-editor';
+
+// DEFAULT_MENU_BAR is:
+[
+  { label: 'File', items: ['importDocument', 'export'] },
+  { label: 'Edit', items: ['undo', 'redo', '---', 'findReplace'] },
+  { label: 'View', items: ['fullscreen', 'toggleMarkdown', 'sourceMode'] },
+  { label: 'Insert', items: [
+    'link', 'image', 'table', 'attachment', 'embedMedia',
+    '---', 'blockquote', 'codeBlock', 'horizontalRule',
+  ]},
+  { label: 'Format', items: [
+    'bold', 'italic', 'underline', 'strikethrough',
+    '---', 'subscript', 'superscript',
+    '---',
+    { label: 'Alignment', items: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify'] },
+    '---', 'orderedList', 'unorderedList', 'taskList',
+    '---', 'foreColor', 'backColor',
+  ]},
+]
+```
+
+### Custom Menu Bar
+
+Pass an array of menu objects to fully customize which menus and items appear:
+
+```jsx
+<RemyxEditor
+  menuBar={[
+    { label: 'File', items: ['importDocument', 'export'] },
+    { label: 'Edit', items: ['undo', 'redo', '---', 'findReplace'] },
+    { label: 'Format', items: [
+      'bold', 'italic', 'underline',
+      '---',
+      { label: 'Alignment', items: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify'] },
+    ]},
+  ]}
+/>
+```
+
+#### Menu Configuration Schema
+
+Each menu object has:
+
+| Property | Type                              | Description                                                     |
+| -------- | --------------------------------- | --------------------------------------------------------------- |
+| `label`  | `string`                          | Menu trigger label displayed in the menu bar (e.g. "File")      |
+| `items`  | `(string \| SubMenu \| '---')[]` | Array of command names, `'---'` separators, or submenu objects   |
+
+Submenu objects follow the same `{ label, items }` shape for nested menus. Any command from the [Available Toolbar Items](#available-toolbar-items) table can be used as a menu item.
+
+#### Separators
+
+Use the `'---'` string to add visual separators between groups of related items:
+
+```js
+{ label: 'Edit', items: ['undo', 'redo', '---', 'findReplace'] }
+//                                         ^^^
+//                         separator between redo and find/replace
+```
+
+#### Submenus
+
+Nest menus by using an object with `label` and `items` instead of a command string:
+
+```js
+{ label: 'Format', items: [
+  'bold', 'italic',
+  '---',
+  { label: 'Alignment', items: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify'] },
+  { label: 'Lists', items: ['orderedList', 'unorderedList', 'taskList'] },
+]}
+```
+
+Submenus open on hover and display a chevron (▸) indicator.
+
+### Menu Bar with Config File
+
+The `menuBar` prop can also be set via the config file system:
+
+```js
+import { defineConfig } from 'remyx-editor';
+
+export default defineConfig({
+  theme: 'dark',
+  menuBar: true, // enable default menu bar for all editors
+
+  editors: {
+    full: {
+      menuBar: true, // default menu bar for this editor
+    },
+    minimal: {
+      menuBar: [
+        { label: 'Edit', items: ['undo', 'redo'] },
+        { label: 'Format', items: ['bold', 'italic', 'underline'] },
+      ],
+      toolbar: [['headings', 'fontFamily', 'fontSize']],
+    },
+    simple: {
+      // no menuBar — toolbar only
+      toolbar: [['bold', 'italic'], ['link']],
+    },
+  },
+});
+```
+
+### Toolbar Auto-Deduplication
+
+When a menu bar is active and no explicit `toolbar` prop is passed, toolbar items that also appear in the menu bar are automatically removed from the toolbar. This keeps the UI clean — commands are accessible from the menu bar while the toolbar retains only items not covered by the menus (e.g. dropdowns like Headings, Font, and Size).
+
+To keep the full toolbar alongside a menu bar, pass an explicit `toolbar` prop:
+
+```jsx
+import { DEFAULT_TOOLBAR } from 'remyx-editor';
+
+<RemyxEditor menuBar={true} toolbar={DEFAULT_TOOLBAR} />
+```
+
+### Menu Bar Behavior
+
+- **Click** a menu trigger to open its dropdown
+- **Hover** over other triggers while a menu is open to switch menus instantly
+- **Click** a menu item to execute the command and close the menu
+- **Escape** or click outside to close an open menu
+- Submenus open on hover with a chevron (▸) indicator
+- Toggle commands (bold, italic, fullscreen, etc.) display active state highlighting
+- Modal commands (link, image, table, etc.) open their respective dialogs
+- Menu bar automatically inherits the editor's theme (light/dark) and custom theme variables
+
+## Multiple Editors
+
+Multiple `<RemyxEditor />` instances can be rendered on the same page without any additional configuration. Each editor is fully isolated — no shared state, no event conflicts, and no DOM collisions.
+
+### Basic Usage
+
+```jsx
+function App() {
+  return (
+    <>
+      <RemyxEditor placeholder="Editor 1..." height={300} />
+      <RemyxEditor placeholder="Editor 2..." height={300} />
+      <RemyxEditor placeholder="Editor 3..." height={200} />
+    </>
+  );
+}
+```
+
+### What's Isolated Per Instance
+
+Each editor maintains its own:
+
+| Feature              | Isolation                                                              |
+| -------------------- | ---------------------------------------------------------------------- |
+| **Content & state**  | Separate undo/redo history, content, and selection tracking            |
+| **Toolbar**          | Independent toolbar state — dropdowns, color pickers, active states    |
+| **Menu bar**         | Menus open/close independently; hover-switching is scoped per editor   |
+| **Modals**           | Each editor opens its own modals (link, image, table, find/replace)    |
+| **Floating toolbar** | Appears only for the editor with an active text selection              |
+| **Context menu**     | Right-click menus are scoped to the editor that was clicked            |
+| **Fullscreen**       | Each editor can enter/exit fullscreen independently                    |
+| **Plugins**          | Plugin instances are created per editor with separate state            |
+| **Events**           | Each editor has its own `EventBus` — listeners don't cross boundaries  |
+| **Keyboard shortcuts** | Shortcuts only fire for the focused editor                          |
+
+### Mixed Configurations
+
+Combine different toolbars, themes, menu bars, and config files on a single page:
+
+```jsx
+import { RemyxEditor, RemyxConfigProvider, defineConfig } from 'remyx-editor';
+
+const config = defineConfig({
+  theme: 'dark',
+  editors: {
+    minimal: {
+      toolbar: [['bold', 'italic', 'underline'], ['link']],
+      height: 150,
+    },
+    comments: {
+      toolbar: [['bold', 'italic'], ['orderedList', 'unorderedList']],
+      statusBar: false,
+      height: 120,
+    },
+  },
+});
+
+function App() {
+  return (
+    <RemyxConfigProvider config={config}>
+      {/* Full editor with menu bar */}
+      <RemyxEditor menuBar={true} height={400} />
+
+      {/* Side-by-side editors */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <RemyxEditor config="minimal" />
+        <RemyxEditor config="comments" />
+      </div>
+
+      {/* Standalone with different theme */}
+      <RemyxEditor theme="light" placeholder="Standalone editor" />
+    </RemyxConfigProvider>
+  );
+}
+```
+
+### Notes
+
+- There is no hard limit on the number of editors per page. Performance scales linearly with each instance.
+- Editors inside a `RemyxConfigProvider` share the config object (read-only), but all runtime state is per-instance.
+- The `attachTo` prop also works with multiple editors — each can attach to its own `<textarea>` or `<div>`.
 
 ## Font Configuration
 
@@ -248,7 +596,9 @@ const toolbar = createToolbar([
 Replace the default font dropdown entirely with your own fonts:
 
 ```jsx
-<RemyxEditor fonts={['Arial', 'Georgia', 'Courier New', 'My Custom Font']} />
+<RemyxEditor
+  fonts={['Arial', 'Georgia', 'Courier New', 'My Custom Font']}
+/>
 ```
 
 ### Google Fonts
@@ -306,13 +656,13 @@ const fonts = addFonts(DEFAULT_FONTS, ['My Custom Font'], { position: 'start' })
 Standalone utility to load Google Fonts. Useful outside the editor or when using `useRemyxEditor`:
 
 ```js
-import { loadGoogleFonts } from 'remyx-editor'
+import { loadGoogleFonts } from 'remyx-editor';
 
 // Load fonts programmatically
-loadGoogleFonts(['Roboto', 'Lato', 'Montserrat'])
+loadGoogleFonts(['Roboto', 'Lato', 'Montserrat']);
 
 // With specific weights
-loadGoogleFonts(['Roboto:wght@400;700'])
+loadGoogleFonts(['Roboto:wght@400;700']);
 ```
 
 ## Status Bar (Word & Character Count)
@@ -417,40 +767,40 @@ import { RemyxEditor, THEME_PRESETS } from 'remyx-editor'
 
 #### Available Theme Variables
 
-| Key | CSS Variable | Description |
-|-----|-------------|-------------|
-| `bg` | `--rmx-bg` | Editor background |
-| `text` | `--rmx-text` | Primary text color |
-| `textSecondary` | `--rmx-text-secondary` | Muted text color |
-| `border` | `--rmx-border` | Border color |
-| `borderSubtle` | `--rmx-border-subtle` | Subtle border color |
-| `toolbarBg` | `--rmx-toolbar-bg` | Toolbar background |
-| `toolbarBorder` | `--rmx-toolbar-border` | Toolbar border |
-| `toolbarButtonHover` | `--rmx-toolbar-button-hover` | Button hover background |
-| `toolbarButtonActive` | `--rmx-toolbar-button-active` | Button active background |
-| `toolbarIcon` | `--rmx-toolbar-icon` | Icon color |
-| `toolbarIconActive` | `--rmx-toolbar-icon-active` | Active icon color |
-| `primary` | `--rmx-primary` | Primary accent color |
-| `primaryHover` | `--rmx-primary-hover` | Primary hover color |
-| `primaryLight` | `--rmx-primary-light` | Light primary (backgrounds) |
-| `focusRing` | `--rmx-focus-ring` | Focus outline color |
-| `selection` | `--rmx-selection` | Text selection color |
-| `danger` | `--rmx-danger` | Error/danger color |
-| `dangerLight` | `--rmx-danger-light` | Light danger color |
-| `placeholder` | `--rmx-placeholder` | Placeholder text color |
-| `modalBg` | `--rmx-modal-bg` | Modal background |
-| `modalOverlay` | `--rmx-modal-overlay` | Modal overlay |
-| `statusbarBg` | `--rmx-statusbar-bg` | Status bar background |
-| `statusbarText` | `--rmx-statusbar-text` | Status bar text |
-| `fontFamily` | `--rmx-font-family` | UI font stack |
-| `fontSize` | `--rmx-font-size` | UI font size |
-| `contentFontSize` | `--rmx-content-font-size` | Content font size |
-| `contentLineHeight` | `--rmx-content-line-height` | Content line height |
-| `radius` | `--rmx-radius` | Border radius |
-| `radiusSm` | `--rmx-radius-sm` | Small border radius |
-| `spacingXs` | `--rmx-spacing-xs` | Extra small spacing |
-| `spacingSm` | `--rmx-spacing-sm` | Small spacing |
-| `spacingMd` | `--rmx-spacing-md` | Medium spacing |
+| Key                   | CSS Variable                  | Description                 |
+| --------------------- | ----------------------------- | --------------------------- |
+| `bg`                  | `--rmx-bg`                    | Editor background           |
+| `text`                | `--rmx-text`                  | Primary text color          |
+| `textSecondary`       | `--rmx-text-secondary`        | Muted text color            |
+| `border`              | `--rmx-border`                | Border color                |
+| `borderSubtle`        | `--rmx-border-subtle`         | Subtle border color         |
+| `toolbarBg`           | `--rmx-toolbar-bg`            | Toolbar background          |
+| `toolbarBorder`       | `--rmx-toolbar-border`        | Toolbar border              |
+| `toolbarButtonHover`  | `--rmx-toolbar-button-hover`  | Button hover background     |
+| `toolbarButtonActive` | `--rmx-toolbar-button-active` | Button active background    |
+| `toolbarIcon`         | `--rmx-toolbar-icon`          | Icon color                  |
+| `toolbarIconActive`   | `--rmx-toolbar-icon-active`   | Active icon color           |
+| `primary`             | `--rmx-primary`               | Primary accent color        |
+| `primaryHover`        | `--rmx-primary-hover`         | Primary hover color         |
+| `primaryLight`        | `--rmx-primary-light`         | Light primary (backgrounds) |
+| `focusRing`           | `--rmx-focus-ring`            | Focus outline color         |
+| `selection`           | `--rmx-selection`             | Text selection color        |
+| `danger`              | `--rmx-danger`                | Error/danger color          |
+| `dangerLight`         | `--rmx-danger-light`          | Light danger color          |
+| `placeholder`         | `--rmx-placeholder`           | Placeholder text color      |
+| `modalBg`             | `--rmx-modal-bg`              | Modal background            |
+| `modalOverlay`        | `--rmx-modal-overlay`         | Modal overlay               |
+| `statusbarBg`         | `--rmx-statusbar-bg`          | Status bar background       |
+| `statusbarText`       | `--rmx-statusbar-text`        | Status bar text             |
+| `fontFamily`          | `--rmx-font-family`           | UI font stack               |
+| `fontSize`            | `--rmx-font-size`             | UI font size                |
+| `contentFontSize`     | `--rmx-content-font-size`     | Content font size           |
+| `contentLineHeight`   | `--rmx-content-line-height`   | Content line height         |
+| `radius`              | `--rmx-radius`                | Border radius               |
+| `radiusSm`            | `--rmx-radius-sm`             | Small border radius         |
+| `spacingXs`           | `--rmx-spacing-xs`            | Extra small spacing         |
+| `spacingSm`           | `--rmx-spacing-sm`            | Small spacing               |
+| `spacingMd`           | `--rmx-spacing-md`            | Medium spacing              |
 
 ### Per-Item Toolbar Theming
 
@@ -504,29 +854,29 @@ Both props can be used together. `customTheme` sets the global theme, and `toolb
 
 #### Available Per-Item Style Properties
 
-| Key | CSS Variable | Description |
-|-----|-------------|-------------|
-| `color` | `--rmx-tb-color` | Icon / text color |
-| `background` | `--rmx-tb-bg` | Default background |
-| `hoverColor` | `--rmx-tb-hover-color` | Color on hover |
-| `hoverBackground` | `--rmx-tb-hover-bg` | Background on hover |
-| `activeColor` | `--rmx-tb-active-color` | Color when active / pressed |
-| `activeBackground` | `--rmx-tb-active-bg` | Background when active |
-| `border` | `--rmx-tb-border` | Border shorthand |
-| `borderRadius` | `--rmx-tb-radius` | Border radius |
-| `size` | `--rmx-tb-size` | Button width & height |
-| `iconSize` | `--rmx-tb-icon-size` | Icon size inside button |
-| `padding` | `--rmx-tb-padding` | Button padding |
-| `opacity` | `--rmx-tb-opacity` | Button opacity |
+| Key                | CSS Variable            | Description                 |
+| ------------------ | ----------------------- | --------------------------- |
+| `color`            | `--rmx-tb-color`        | Icon / text color           |
+| `background`       | `--rmx-tb-bg`           | Default background          |
+| `hoverColor`       | `--rmx-tb-hover-color`  | Color on hover              |
+| `hoverBackground`  | `--rmx-tb-hover-bg`     | Background on hover         |
+| `activeColor`      | `--rmx-tb-active-color` | Color when active / pressed |
+| `activeBackground` | `--rmx-tb-active-bg`    | Background when active      |
+| `border`           | `--rmx-tb-border`       | Border shorthand            |
+| `borderRadius`     | `--rmx-tb-radius`       | Border radius               |
+| `size`             | `--rmx-tb-size`         | Button width & height       |
+| `iconSize`         | `--rmx-tb-icon-size`    | Icon size inside button     |
+| `padding`          | `--rmx-tb-padding`      | Button padding              |
+| `opacity`          | `--rmx-tb-opacity`      | Button opacity              |
 
 #### Separator Style Properties
 
 When using the `_separator` key, the following properties are available:
 
-| Key | CSS Variable | Description |
-|-----|-------------|-------------|
-| `color` | `--rmx-tb-sep-color` | Separator color |
-| `width` | `--rmx-tb-sep-width` | Separator width |
+| Key      | CSS Variable          | Description      |
+| -------- | --------------------- | ---------------- |
+| `color`  | `--rmx-tb-sep-color`  | Separator color  |
+| `width`  | `--rmx-tb-sep-width`  | Separator width  |
 | `height` | `--rmx-tb-sep-height` | Separator height |
 | `margin` | `--rmx-tb-sep-margin` | Separator margin |
 
@@ -536,15 +886,15 @@ The editor automatically handles pasting from a wide range of sources. Rich text
 
 ### Supported Sources
 
-| Source | What Happens |
-|--------|-------------|
-| **Microsoft Word** | Strips Office XML, `mso-*` styles, `MsoNormal` classes, conditional comments, and `<o:p>` tags. Converts Word-style indented bullet/number paragraphs into proper `<ul>`/`<ol>` lists. |
-| **Google Docs** | Removes `docs-internal-*` IDs, single-letter class names, `dir="ltr"` attributes. Converts `font-weight: 700` spans to `<strong>`, italic spans to `<em>`, and strikethrough spans to `<s>`. |
-| **LibreOffice / OpenOffice** | Strips namespace tags (`text:`, `office:`, `draw:`, etc.) and auto-generated class names (`P1`, `T2`, `Table3`). |
-| **Apple Pages** | Removes iWork-specific classes and `apple-content-edited` attributes. |
-| **Markdown text** | When pasting plain text that looks like markdown (headings, lists, bold, links, code fences, etc.), the editor auto-detects and converts it to rich HTML — even in HTML output mode. |
-| **Plain text** | Wraps paragraphs in `<p>` tags and converts line breaks to `<br>`. |
-| **Images** | Pasted or dropped images are inserted inline as base64 data URIs (or uploaded via `uploadHandler` if configured). |
+| Source                       | What Happens                                                                                                                                                                                 |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Microsoft Word**           | Strips Office XML, `mso-*` styles, `MsoNormal` classes, conditional comments, and `<o:p>` tags. Converts Word-style indented bullet/number paragraphs into proper `<ul>`/`<ol>` lists.       |
+| **Google Docs**              | Removes `docs-internal-*` IDs, single-letter class names, `dir="ltr"` attributes. Converts `font-weight: 700` spans to `<strong>`, italic spans to `<em>`, and strikethrough spans to `<s>`. |
+| **LibreOffice / OpenOffice** | Strips namespace tags (`text:`, `office:`, `draw:`, etc.) and auto-generated class names (`P1`, `T2`, `Table3`).                                                                             |
+| **Apple Pages**              | Removes iWork-specific classes and `apple-content-edited` attributes.                                                                                                                        |
+| **Markdown text**            | When pasting plain text that looks like markdown (headings, lists, bold, links, code fences, etc.), the editor auto-detects and converts it to rich HTML — even in HTML output mode.         |
+| **Plain text**               | Wraps paragraphs in `<p>` tags and converts line breaks to `<br>`.                                                                                                                           |
+| **Images**                   | Pasted or dropped images are inserted inline as base64 data URIs (or uploaded via `uploadHandler` if configured).                                                                            |
 
 ### How It Works
 
@@ -558,10 +908,10 @@ All paste input paths (keyboard paste, drag-and-drop, and context menu paste) sh
 The paste cleaning functions are also exported for standalone use:
 
 ```js
-import { cleanPastedHTML, looksLikeMarkdown } from 'remyx-editor'
+import { cleanPastedHTML, looksLikeMarkdown } from 'remyx-editor';
 
 // Clean HTML from external sources
-const clean = cleanPastedHTML(wordHtml)
+const clean = cleanPastedHTML(wordHtml);
 
 // Check if text looks like markdown
 if (looksLikeMarkdown(text)) {
@@ -578,7 +928,7 @@ When no `uploadHandler` is provided, images are inserted as inline base64 data U
 ### Signature
 
 ```ts
-uploadHandler: (file: File) => Promise<string>
+uploadHandler: (file: File) => Promise<string>;
 ```
 
 ### Local / Custom Server Upload
@@ -588,16 +938,16 @@ Save files to your own server or a local path:
 ```jsx
 <RemyxEditor
   uploadHandler={async (file) => {
-    const formData = new FormData()
-    formData.append('file', file)
+    const formData = new FormData();
+    formData.append('file', file);
 
     const res = await fetch('/api/upload', {
       method: 'POST',
       body: formData,
-    })
+    });
 
-    const { url } = await res.json()
-    return url // e.g. "/uploads/photo-abc123.jpg"
+    const { url } = await res.json();
+    return url; // e.g. "/uploads/photo-abc123.jpg"
   }}
 />
 ```
@@ -617,18 +967,18 @@ Upload directly to an S3 bucket using pre-signed URLs:
         filename: file.name,
         contentType: file.type,
       }),
-    })
-    const { uploadUrl, publicUrl } = await res.json()
+    });
+    const { uploadUrl, publicUrl } = await res.json();
 
     // 2. Upload directly to S3
     await fetch(uploadUrl, {
       method: 'PUT',
       headers: { 'Content-Type': file.type },
       body: file,
-    })
+    });
 
     // 3. Return the public URL for the editor to use
-    return publicUrl // e.g. "https://my-bucket.s3.amazonaws.com/uploads/photo-abc123.jpg"
+    return publicUrl; // e.g. "https://my-bucket.s3.amazonaws.com/uploads/photo-abc123.jpg"
   }}
 />
 ```
@@ -640,9 +990,9 @@ The same pre-signed URL pattern works with any S3-compatible service:
 ```jsx
 <RemyxEditor
   uploadHandler={async (file) => {
-    const { uploadUrl, publicUrl } = await getPresignedUrl(file)
-    await fetch(uploadUrl, { method: 'PUT', body: file })
-    return publicUrl
+    const { uploadUrl, publicUrl } = await getPresignedUrl(file);
+    await fetch(uploadUrl, { method: 'PUT', body: file });
+    return publicUrl;
   }}
 />
 ```
@@ -651,14 +1001,14 @@ The same pre-signed URL pattern works with any S3-compatible service:
 
 The `uploadHandler` is used consistently across all upload paths in the editor:
 
-| Path | Behavior |
-|------|----------|
-| **Image toolbar button** (Upload tab) | File picker triggers `uploadHandler`, URL is inserted as `<img>` |
+| Path                                       | Behavior                                                                 |
+| ------------------------------------------ | ------------------------------------------------------------------------ |
+| **Image toolbar button** (Upload tab)      | File picker triggers `uploadHandler`, URL is inserted as `<img>`         |
 | **Attachment toolbar button** (Upload tab) | File picker triggers `uploadHandler`, URL is inserted as attachment chip |
-| **Drag & drop image** | Dropped image files trigger `uploadHandler` |
-| **Drag & drop file** | Non-image files trigger `uploadHandler`, inserted as attachment |
-| **Paste image** | Pasted images trigger `uploadHandler` (falls back to base64 if not set) |
-| **Paste file** | Non-image pasted files trigger `uploadHandler`, inserted as attachment |
+| **Drag & drop image**                      | Dropped image files trigger `uploadHandler`                              |
+| **Drag & drop file**                       | Non-image files trigger `uploadHandler`, inserted as attachment          |
+| **Paste image**                            | Pasted images trigger `uploadHandler` (falls back to base64 if not set)  |
+| **Paste file**                             | Non-image pasted files trigger `uploadHandler`, inserted as attachment   |
 
 ### Without `uploadHandler`
 
@@ -680,10 +1030,10 @@ When no handler is provided:
 Conversion utilities are also available for standalone use:
 
 ```js
-import { htmlToMarkdown, markdownToHtml } from 'remyx-editor'
+import { htmlToMarkdown, markdownToHtml } from 'remyx-editor';
 
-const md = htmlToMarkdown('<h1>Hello</h1><p>World</p>')
-const html = markdownToHtml('# Hello\n\nWorld')
+const md = htmlToMarkdown('<h1>Hello</h1><p>World</p>');
+const html = markdownToHtml('# Hello\n\nWorld');
 ```
 
 ## Attaching to Existing Elements
@@ -693,11 +1043,11 @@ Enhance an existing `<textarea>` or `<div>` with a full WYSIWYG editor using the
 ### Textarea
 
 ```jsx
-import { useRef } from 'react'
-import { RemyxEditor } from 'remyx-editor'
+import { useRef } from 'react';
+import { RemyxEditor } from 'remyx-editor';
 
 function App() {
-  const textareaRef = useRef(null)
+  const textareaRef = useRef(null);
 
   return (
     <>
@@ -708,7 +1058,7 @@ function App() {
         height={400}
       />
     </>
-  )
+  );
 }
 ```
 
@@ -718,7 +1068,7 @@ The textarea is hidden and replaced with the editor. Its value stays in sync and
 
 ```jsx
 function App() {
-  const divRef = useRef(null)
+  const divRef = useRef(null);
 
   return (
     <>
@@ -728,7 +1078,7 @@ function App() {
       </div>
       <RemyxEditor attachTo={divRef} theme="dark" height={400} />
     </>
-  )
+  );
 }
 ```
 
@@ -737,30 +1087,33 @@ function App() {
 For lower-level control, use the hook directly:
 
 ```jsx
-import { useRef } from 'react'
-import { useRemyxEditor } from 'remyx-editor'
+import { useRef } from 'react';
+import { useRemyxEditor } from 'remyx-editor';
 
 function App() {
-  const targetRef = useRef(null)
-  const { engine, containerRef, editableRef, ready } = useRemyxEditor(targetRef, {
-    onChange: (content) => console.log(content),
-    placeholder: 'Type here...',
-    theme: 'light',
-    height: 400,
-  })
+  const targetRef = useRef(null);
+  const { engine, containerRef, editableRef, ready } = useRemyxEditor(
+    targetRef,
+    {
+      onChange: (content) => console.log(content),
+      placeholder: 'Type here...',
+      theme: 'light',
+      height: 400,
+    },
+  );
 
-  return <textarea ref={targetRef} />
+  return <textarea ref={targetRef} />;
 }
 ```
 
 The hook returns:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `engine` | `EditorEngine \| null` | The editor engine instance |
-| `containerRef` | `RefObject` | Ref to the editor wrapper element |
-| `editableRef` | `RefObject` | Ref to the contenteditable element |
-| `ready` | `boolean` | Whether the editor has initialized |
+| Property       | Type                   | Description                        |
+| -------------- | ---------------------- | ---------------------------------- |
+| `engine`       | `EditorEngine \| null` | The editor engine instance         |
+| `containerRef` | `RefObject`            | Ref to the editor wrapper element  |
+| `editableRef`  | `RefObject`            | Ref to the contenteditable element |
+| `ready`        | `boolean`              | Whether the editor has initialized |
 
 ## Plugins
 
@@ -777,14 +1130,14 @@ Three plugins are included and active by default:
 Create plugins using `createPlugin`:
 
 ```js
-import { createPlugin } from 'remyx-editor'
+import { createPlugin } from 'remyx-editor';
 
 const MyPlugin = createPlugin({
   name: 'my-plugin',
 
   init(engine) {
     // Called when the editor initializes
-    console.log('Editor ready:', engine)
+    console.log('Editor ready:', engine);
   },
 
   destroy(engine) {
@@ -806,7 +1159,7 @@ const MyPlugin = createPlugin({
   contextMenuItems: [
     // Add items to the right-click menu
   ],
-})
+});
 ```
 
 Pass custom plugins via the `plugins` prop:
@@ -819,35 +1172,35 @@ Pass custom plugins via the `plugins` prop:
 
 Default keyboard shortcuts (`mod` = `Cmd` on Mac, `Ctrl` on Windows/Linux):
 
-| Shortcut | Action |
-|----------|--------|
-| `mod+B` | Bold |
-| `mod+I` | Italic |
-| `mod+U` | Underline |
-| `mod+Shift+X` | Strikethrough |
-| `mod+Z` | Undo |
-| `mod+Shift+Z` | Redo |
-| `mod+K` | Insert link |
-| `mod+F` | Find & replace |
-| `mod+Shift+7` | Numbered list |
-| `mod+Shift+8` | Bulleted list |
-| `mod+Shift+9` | Blockquote |
-| `mod+Shift+C` | Code block |
-| `Tab` | Indent |
-| `Shift+Tab` | Outdent |
-| `mod+Shift+F` | Fullscreen |
-| `mod+Shift+U` | Source mode |
-| `mod+,` | Subscript |
-| `mod+.` | Superscript |
+| Shortcut      | Action         |
+| ------------- | -------------- |
+| `mod+B`       | Bold           |
+| `mod+I`       | Italic         |
+| `mod+U`       | Underline      |
+| `mod+Shift+X` | Strikethrough  |
+| `mod+Z`       | Undo           |
+| `mod+Shift+Z` | Redo           |
+| `mod+K`       | Insert link    |
+| `mod+F`       | Find & replace |
+| `mod+Shift+7` | Numbered list  |
+| `mod+Shift+8` | Bulleted list  |
+| `mod+Shift+9` | Blockquote     |
+| `mod+Shift+C` | Code block     |
+| `Tab`         | Indent         |
+| `Shift+Tab`   | Outdent        |
+| `mod+Shift+F` | Fullscreen     |
+| `mod+Shift+U` | Source mode    |
+| `mod+,`       | Subscript      |
+| `mod+.`       | Superscript    |
 
 ## Exports
 
 ```js
 // Component
-import { RemyxEditor } from 'remyx-editor'
+import { RemyxEditor } from 'remyx-editor';
 
 // Hook
-import { useRemyxEditor } from 'remyx-editor'
+import { useRemyxEditor } from 'remyx-editor';
 
 // Toolbar configuration
 import {
@@ -860,29 +1213,47 @@ import {
   DEFAULT_FONT_SIZES,
   DEFAULT_COLORS,
   DEFAULT_KEYBINDINGS,
-} from 'remyx-editor'
+} from 'remyx-editor';
 
 // Font configuration
-import { removeFonts, addFonts, loadGoogleFonts } from 'remyx-editor'
+import { removeFonts, addFonts, loadGoogleFonts } from 'remyx-editor';
 
 // Theme configuration
-import { createTheme, THEME_VARIABLES, THEME_PRESETS } from 'remyx-editor'
+import {
+  createTheme,
+  THEME_VARIABLES,
+  THEME_PRESETS,
+} from 'remyx-editor';
 
 // Per-item toolbar theming
-import { createToolbarItemTheme, resolveToolbarItemStyle, TOOLBAR_ITEM_STYLE_KEYS } from 'remyx-editor'
+import {
+  createToolbarItemTheme,
+  resolveToolbarItemStyle,
+  TOOLBAR_ITEM_STYLE_KEYS,
+} from 'remyx-editor';
 
 // Markdown utilities
-import { htmlToMarkdown, markdownToHtml } from 'remyx-editor'
+import { htmlToMarkdown, markdownToHtml } from 'remyx-editor';
 
 // Paste utilities
-import { cleanPastedHTML, looksLikeMarkdown } from 'remyx-editor'
+import { cleanPastedHTML, looksLikeMarkdown } from 'remyx-editor';
 
 // Plugin system
-import { createPlugin } from 'remyx-editor'
-import { WordCountPlugin, AutolinkPlugin, PlaceholderPlugin } from 'remyx-editor'
+import { createPlugin } from 'remyx-editor';
+import {
+  WordCountPlugin,
+  AutolinkPlugin,
+  PlaceholderPlugin,
+} from 'remyx-editor';
+
+// Config file support
+import { defineConfig, RemyxConfigProvider } from 'remyx-editor';
+
+// Menu bar
+import { DEFAULT_MENU_BAR } from 'remyx-editor';
 
 // Core (advanced)
-import { EditorEngine, EventBus } from 'remyx-editor'
+import { EditorEngine, EventBus } from 'remyx-editor';
 ```
 
 ## License

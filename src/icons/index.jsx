@@ -322,6 +322,10 @@ export const ChevronDownIcon = icon(
   <polyline points="6 9 12 15 18 9" />
 )
 
+export const ChevronRightIcon = icon(
+  <polyline points="9 6 15 12 9 18" />
+)
+
 export const CheckIcon = icon(
   <polyline points="20 6 9 17 4 12" />
 )

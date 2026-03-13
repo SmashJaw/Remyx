@@ -58,6 +58,20 @@ export const DEFAULT_COLORS = [
   '#5b0f00', '#660000', '#783f04', '#7f6000', '#274e13', '#0c343d', '#1c4587', '#073763', '#20124d', '#4c1130',
 ]
 
+export const DEFAULT_MENU_BAR = [
+  { label: 'File', items: ['importDocument', 'export'] },
+  { label: 'Edit', items: ['undo', 'redo', '---', 'findReplace'] },
+  { label: 'View', items: ['fullscreen', 'toggleMarkdown', 'sourceMode'] },
+  { label: 'Insert', items: ['link', 'image', 'table', 'attachment', 'embedMedia', '---', 'blockquote', 'codeBlock', 'horizontalRule'] },
+  { label: 'Format', items: [
+    'bold', 'italic', 'underline', 'strikethrough', '---',
+    'subscript', 'superscript', '---',
+    { label: 'Alignment', items: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify'] },
+    '---', 'orderedList', 'unorderedList', 'taskList',
+    '---', 'foreColor', 'backColor',
+  ]},
+]
+
 export const HEADING_OPTIONS = [
   { label: 'Normal', value: 'p', tag: 'p' },
   { label: 'Heading 1', value: 'h1', tag: 'h1' },

@@ -4,45 +4,7 @@ import { ToolbarDropdown } from './ToolbarDropdown.jsx'
 import { ToolbarColorPicker } from './ToolbarColorPicker.jsx'
 import { ToolbarSeparator } from './ToolbarSeparator.jsx'
 import { DEFAULT_TOOLBAR, DEFAULT_FONTS, DEFAULT_FONT_SIZES, HEADING_OPTIONS } from '../../constants/defaults.js'
-import { isMac } from '../../utils/platform.js'
-
-const BUTTON_COMMANDS = new Set([
-  'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript',
-  'alignLeft', 'alignCenter', 'alignRight', 'alignJustify',
-  'orderedList', 'unorderedList', 'taskList',
-  'blockquote', 'codeBlock', 'horizontalRule',
-  'undo', 'redo', 'removeFormat',
-  'indent', 'outdent',
-  'fullscreen', 'sourceMode', 'toggleMarkdown',
-])
-
-const TOOLTIP_MAP = {
-  bold: 'Bold', italic: 'Italic', underline: 'Underline', strikethrough: 'Strikethrough',
-  subscript: 'Subscript', superscript: 'Superscript',
-  alignLeft: 'Align Left', alignCenter: 'Align Center', alignRight: 'Align Right', alignJustify: 'Justify',
-  orderedList: 'Numbered List', unorderedList: 'Bulleted List', taskList: 'Task List',
-  blockquote: 'Blockquote', codeBlock: 'Code Block', horizontalRule: 'Horizontal Rule',
-  undo: 'Undo', redo: 'Redo', removeFormat: 'Remove Formatting',
-  indent: 'Indent', outdent: 'Outdent',
-  link: 'Insert Link', image: 'Insert Image', attachment: 'Attach File', table: 'Insert Table',
-  importDocument: 'Import Document',
-  embedMedia: 'Embed Media', findReplace: 'Find & Replace',
-  fullscreen: 'Fullscreen', sourceMode: 'Source Code',
-  toggleMarkdown: 'Toggle Markdown', export: 'Export Document',
-}
-
-const SHORTCUT_MAP = {
-  bold: 'mod+B', italic: 'mod+I', underline: 'mod+U',
-  strikethrough: 'mod+Shift+X', undo: 'mod+Z', redo: 'mod+Shift+Z',
-  insertLink: 'mod+K', findReplace: 'mod+F',
-  fullscreen: 'mod+Shift+F', sourceMode: 'mod+Shift+U',
-}
-
-function getShortcutLabel(command) {
-  const shortcut = SHORTCUT_MAP[command]
-  if (!shortcut) return ''
-  return shortcut.replace(/mod/g, isMac() ? '⌘' : 'Ctrl')
-}
+import { BUTTON_COMMANDS, TOOLTIP_MAP, getShortcutLabel, getCommandActiveState } from '../../constants/commands.js'
 
 export function Toolbar({ config, engine, selectionState, onOpenModal, fonts = DEFAULT_FONTS, wordCountButton, toolbarItemTheme }) {
   const toolbarConfig = config || DEFAULT_TOOLBAR
@@ -227,24 +189,7 @@ export function Toolbar({ config, engine, selectionState, onOpenModal, fonts = D
 
     // Regular button commands
     if (BUTTON_COMMANDS.has(command)) {
-      const isActive = command === 'bold' ? selectionState.bold
-        : command === 'italic' ? selectionState.italic
-        : command === 'underline' ? selectionState.underline
-        : command === 'strikethrough' ? selectionState.strikethrough
-        : command === 'subscript' ? selectionState.subscript
-        : command === 'superscript' ? selectionState.superscript
-        : command === 'alignLeft' ? selectionState.alignment === 'left'
-        : command === 'alignCenter' ? selectionState.alignment === 'center'
-        : command === 'alignRight' ? selectionState.alignment === 'right'
-        : command === 'alignJustify' ? selectionState.alignment === 'justify'
-        : command === 'orderedList' ? selectionState.orderedList
-        : command === 'unorderedList' ? selectionState.unorderedList
-        : command === 'blockquote' ? selectionState.blockquote
-        : command === 'codeBlock' ? selectionState.codeBlock
-        : command === 'sourceMode' ? engine.isSourceMode
-        : command === 'toggleMarkdown' ? engine.isMarkdownMode
-        : command === 'fullscreen' ? engine.element?.closest('.rmx-editor')?.classList.contains('rmx-fullscreen')
-        : false
+      const isActive = getCommandActiveState(command, selectionState, engine)
 
       return (
         <ToolbarButton

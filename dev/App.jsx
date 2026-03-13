@@ -1,5 +1,25 @@
 import React, { useState, useRef } from 'react'
-import { RemyxEditor, createToolbarItemTheme } from '../src/index.js'
+import { RemyxEditor, RemyxConfigProvider, defineConfig, createToolbarItemTheme } from '../src/index.js'
+
+const DEMO_CONFIG = defineConfig({
+  theme: 'dark',
+  placeholder: 'Default config placeholder...',
+  height: 300,
+  editors: {
+    minimal: {
+      toolbar: [['bold', 'italic', 'underline'], ['link']],
+      floatingToolbar: false,
+      height: 200,
+      placeholder: 'Minimal editor...',
+    },
+    comments: {
+      toolbar: [['bold', 'italic', 'underline', 'strikethrough'], ['orderedList', 'unorderedList'], ['link']],
+      statusBar: false,
+      height: 150,
+      placeholder: 'Write a comment...',
+    },
+  },
+})
 
 const DEMO_ITEM_THEME = createToolbarItemTheme({
   bold: { color: '#e11d48', activeColor: '#be123c', activeBackground: '#ffe4e6', borderRadius: '50%' },
@@ -158,6 +178,9 @@ export default function App() {
           <button onClick={() => setDemoMode('div')} style={btnStyle(demoMode === 'div')}>
             Div
           </button>
+          <button onClick={() => setDemoMode('config')} style={btnStyle(demoMode === 'config')}>
+            Config File
+          </button>
         </div>
       </div>
 
@@ -231,6 +254,30 @@ export default function App() {
             height={350}
           />
         </div>
+      )}
+
+      {/* Config file mode — multiple editors with named configs */}
+      {demoMode === 'config' && (
+        <RemyxConfigProvider config={DEMO_CONFIG}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+              <h3 style={{ margin: '0 0 8px 0', fontSize: 14 }}>Default Config (dark theme from config)</h3>
+              <RemyxEditor />
+            </div>
+            <div>
+              <h3 style={{ margin: '0 0 8px 0', fontSize: 14 }}>config="minimal" (small toolbar, 200px)</h3>
+              <RemyxEditor config="minimal" />
+            </div>
+            <div>
+              <h3 style={{ margin: '0 0 8px 0', fontSize: 14 }}>config="comments" (no status bar, 150px)</h3>
+              <RemyxEditor config="comments" />
+            </div>
+            <div>
+              <h3 style={{ margin: '0 0 8px 0', fontSize: 14 }}>config="minimal" + prop override (theme="light")</h3>
+              <RemyxEditor config="minimal" theme="light" />
+            </div>
+          </div>
+        </RemyxConfigProvider>
       )}
 
       {showOutput && (

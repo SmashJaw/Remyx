@@ -4,8 +4,10 @@ import { useEditorEngine } from '../hooks/useEditorEngine.js'
 import { useSelection } from '../hooks/useSelection.js'
 import { useModal } from '../hooks/useModal.js'
 import { useContextMenu } from '../hooks/useContextMenu.js'
+import { useRemyxConfig } from '../config/RemyxConfigProvider.jsx'
 import { loadGoogleFonts } from '../utils/fontConfig.js'
-import { DEFAULT_FONTS } from '../constants/defaults.js'
+import { DEFAULT_TOOLBAR, DEFAULT_FONTS, DEFAULT_MENU_BAR } from '../constants/defaults.js'
+import { MenuBar, collectMenuBarCommands } from './MenuBar/MenuBar.jsx'
 import { Toolbar } from './Toolbar/Toolbar.jsx'
 import { EditArea } from './EditArea/EditArea.jsx'
 import { FloatingToolbar } from './EditArea/FloatingToolbar.jsx'
@@ -26,36 +28,70 @@ import '../themes/variables.css'
 import '../themes/light.css'
 import '../themes/dark.css'
 
-export default function RemyxEditor({
-  attachTo,
-  value,
-  defaultValue,
-  onChange,
-  toolbar,
-  theme = 'light',
-  placeholder = '',
-  height = 300,
-  minHeight,
-  maxHeight,
-  readOnly = false,
-  plugins,
-  onReady,
-  onFocus,
-  onBlur,
-  className = '',
-  style,
-  uploadHandler,
-  outputFormat = 'html',
-  floatingToolbar: showFloatingToolbar = true,
-  contextMenu: showContextMenu = true,
-  fonts,
-  googleFonts,
-  statusBar = 'bottom',
-  customTheme,
-  toolbarItemTheme,
-  sanitize,
-  shortcuts,
-}) {
+export default function RemyxEditor(props) {
+  const { config: configName, ...componentProps } = props
+
+  // Resolve config from provider context (if any)
+  const resolvedConfig = useRemyxConfig(configName)
+
+  // Merge: resolved config as defaults, component props override where explicitly provided
+  const merged = resolvedConfig
+    ? Object.keys({ ...resolvedConfig, ...componentProps }).reduce((acc, key) => {
+        acc[key] = componentProps[key] !== undefined ? componentProps[key] : resolvedConfig[key]
+        return acc
+      }, {})
+    : componentProps
+
+  // Destructure with defaults from the merged config
+  const {
+    attachTo,
+    value,
+    defaultValue,
+    onChange,
+    toolbar,
+    menuBar: menuBarProp,
+    theme = 'light',
+    placeholder = '',
+    height = 300,
+    minHeight,
+    maxHeight,
+    readOnly = false,
+    plugins,
+    onReady,
+    onFocus,
+    onBlur,
+    className = '',
+    style,
+    uploadHandler,
+    outputFormat = 'html',
+    floatingToolbar: showFloatingToolbar = true,
+    contextMenu: showContextMenu = true,
+    fonts,
+    googleFonts,
+    statusBar = 'bottom',
+    customTheme,
+    toolbarItemTheme,
+    sanitize,
+    shortcuts,
+  } = merged
+
+  // Resolve menu bar config
+  const menuBarConfig = menuBarProp === true ? DEFAULT_MENU_BAR
+    : Array.isArray(menuBarProp) ? menuBarProp
+    : null
+
+  // Auto-deduplicate toolbar: remove items that are in the menu bar
+  // Only when user didn't explicitly pass a toolbar prop
+  const effectiveToolbar = useMemo(() => {
+    if (!menuBarConfig || props.toolbar !== undefined) return toolbar
+    // Use the toolbar from config or fall back to DEFAULT_TOOLBAR
+    const baseToolbar = toolbar || DEFAULT_TOOLBAR
+    const menuCommands = collectMenuBarCommands(menuBarConfig)
+    return baseToolbar
+      .map(group => group.filter(item => typeof item !== 'string' || !menuCommands.has(item)))
+      .filter(group => group.length > 0)
+  }, [menuBarConfig, toolbar, props.toolbar])
+
   const editAreaRef = useRef(null)
   const editorRootRef = useRef(null)
   const [editorRect, setEditorRect] = useState(null)
@@ -237,8 +273,17 @@ export default function RemyxEditor({
       className={`rmx-editor rmx-theme-${theme} ${className}`}
       style={customTheme ? { ...customTheme, ...style } : style}
     >
+      {menuBarConfig && (
+        <MenuBar
+          config={menuBarConfig}
+          engine={engine}
+          selectionState={selectionState}
+          onOpenModal={handleOpenModal}
+        />
+      )}
+
       <Toolbar
-        config={toolbar}
+        config={effectiveToolbar || toolbar}
         engine={engine}
         selectionState={selectionState}
         onOpenModal={handleOpenModal}
