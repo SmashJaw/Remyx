@@ -17,3 +17,6 @@ npm-debug.log*
 
 # Local env
 *.local
+
+.DS_Store
+dev/
