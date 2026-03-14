@@ -95,14 +95,27 @@ A living document outlining planned features, improvements, and long-term direct
 - Configurable transport: WebSocket, WebRTC, or custom
 - `collaborationProvider` prop — bring your own signaling server or use a hosted option
 
-## Multiple Editor Instances
+## ~~Multiple Editor Instances~~ ✅ Shipped
 
-- Full instance isolation: each editor gets its own engine, history, and event bus
-- No DOM ID collisions — all selectors scoped to the editor root
-- Shared configuration via a `<RemyxProvider>` context wrapper
+- ~~Full instance isolation: each editor gets its own engine, history, and event bus~~
+- ~~No DOM ID collisions — all selectors scoped to the editor root~~
+- ~~Shared configuration via a `<RemyxProvider>` context wrapper~~
 - Inter-editor communication bus for linked editors (e.g., source + preview)
 - Memory-efficient shared singleton for icons, sanitizer schema, and toolbar config
-- Stress-tested with 10+ concurrent editors on a single page
+- ~~Stress-tested with 10+ concurrent editors on a single page~~
+
+## Security Hardening
+
+- Sanitizer: extend dangerous-protocol checking to `src`, `action`, `formaction`, and `data` attributes
+- Sanitizer: domain allowlist for iframe `src` (YouTube, Vimeo, Dailymotion only)
+- Sanitizer: explicit `on*` event handler blocklist as defense-in-depth
+- Sanitizer: fully remove dangerous tags (`script`, `style`, `svg`, `math`, `form`, `object`, `embed`) instead of unwrapping
+- Sanitizer: restrict `<input>` to `type="checkbox"` only
+- URL protocol validation on `insertLink`, `insertImage`, and `window.open` calls
+- File size limits on pasted/dropped images (configurable, 10 MB default)
+- Plugin sandboxing: restricted engine facade, prevent command overwriting
+- CSP-compatible build: eliminate all `document.write`, `execCommand`, and inline style dependencies
+- Subresource integrity (SRI) hashes for CDN-loaded assets (Google Fonts, external scripts)
 
 ## External Configuration
 
@@ -129,6 +142,148 @@ A living document outlining planned features, improvements, and long-term direct
 - Framework-specific bindings for reactivity, lifecycle, and two-way data binding
 - Web Component wrapper (`<remyx-editor>`) for framework-agnostic embedding
 
+## Slash Commands & Command Palette
+
+- `/` trigger opens a searchable command palette inline at the caret
+- Built-in commands: heading, list, table, code block, divider, image, callout, toggle
+- Grouped categories with icons: Text, Media, Embeds, Layout, Advanced
+- Fuzzy search — type `/tbl` to match "Table"
+- Custom slash commands via `slashCommands` prop or plugin API
+- Recently-used commands pinned to the top of the palette
+- `Cmd+K` / `Ctrl+K` opens a global command palette (toolbar actions, formatting, navigation)
+
+## Block-Based Editing
+
+- Draggable block handles on hover — reorder paragraphs, images, tables, and embeds via drag-and-drop
+- Block-level toolbar: appears on hover/focus with block type, drag handle, and actions menu
+- Block type conversion: turn a paragraph into a heading, quote, callout, or list without retyping
+- Nested blocks: toggle lists, collapsible sections, tabbed content
+- Block grouping: select multiple blocks and move, duplicate, or delete as a unit
+- Block templates: save and reuse custom block compositions (e.g., a "feature card" with image + heading + text)
+
+## Callouts, Alerts & Admonitions
+
+- Styled callout blocks: info, warning, error, success, tip, note, question
+- Custom callout types with user-defined icons and colors
+- Collapsible callouts with expand/collapse toggle
+- Nested content inside callouts (lists, code blocks, images)
+- GitHub-flavored alert syntax support (`> [!NOTE]`, `> [!WARNING]`)
+
+## Comments & Annotations
+
+- Inline comment threads: highlight text and attach discussion threads
+- Resolved/unresolved state with visual indicators
+- `onComment`, `onResolve`, `onDelete` callbacks for persistence
+- Comment sidebar panel showing all threads with jump-to-location
+- @mention support in comment bodies with configurable user list
+- Comment-only mode: users can annotate but not edit content
+
+## Version History & Diffing
+
+- Named snapshots: save the current document state with a label
+- Visual diff view: side-by-side or inline diff between any two snapshots
+- Restore to any previous snapshot with one click
+- `onSnapshot` callback for server-side persistence
+- Auto-snapshot on major operations (paste, bulk delete, import)
+- Change attribution: track which user made which changes (pairs with collaboration)
+
+## Content Analytics & Readability
+
+- Real-time readability scores: Flesch-Kincaid, Gunning Fog, Coleman-Liau
+- Reading time estimate (configurable words-per-minute)
+- Sentence and paragraph length warnings (highlight overly complex sentences)
+- Vocabulary level indicator (basic, intermediate, advanced)
+- Content structure analysis: heading hierarchy validation, orphaned sections
+- Goal-based writing: set a target word count with progress indicator
+- SEO hints: keyword density, meta description length, heading structure
+
+## Advanced Link Management
+
+- Link previews: hover to see title, description, and thumbnail (Open Graph / unfurl)
+- Broken link detection: periodic scan with visual indicators for dead links
+- Auto-link: detect and convert raw URLs, emails, and phone numbers as the user types
+- Link analytics: `onLinkClick` callback with click tracking metadata
+- Internal link suggestions: search and link to other documents in the same system
+- Bookmark anchors: insert named anchors and link to them within the document
+
+## Drag-and-Drop Content
+
+- Drop zone overlays: visual guides when dragging files, images, or blocks over the editor
+- Drag between editors: move content between multiple Remyx instances on the same page
+- External drag support: drop images, files, and rich text from the desktop or other apps
+- Drag-to-reorder for list items, table rows, and block elements
+- Ghost preview during drag showing exactly where content will land
+
+## Table of Contents & Document Outline
+
+- Auto-generated table of contents from heading hierarchy
+- Sticky outline sidebar or floating panel
+- Click-to-scroll navigation
+- Collapsible sections based on heading levels
+- Numbering options: 1.1, 1.2, etc.
+- `onOutlineChange` callback for syncing with external navigation
+
+## Mentions & Tagging
+
+- `@mention` support with configurable data source (async search)
+- `#tag` support for inline categorization
+- Mention chips rendered inline with avatar, name, and link
+- Typeahead dropdown with fuzzy matching and keyboard navigation
+- Custom mention types: users, documents, issues, PRs, etc.
+- `onMention` callback for notifications and analytics
+
+## Math & Equation Editor
+
+- LaTeX / KaTeX inline and block math rendering
+- Visual equation builder for users unfamiliar with LaTeX syntax
+- Live preview as you type
+- Equation numbering and cross-referencing
+- Common symbol palette with categorized groups (Greek, operators, arrows, etc.)
+- Copy equation as LaTeX, MathML, or image
+
+## Diagram & Drawing Support
+
+- Mermaid.js integration for flowcharts, sequence diagrams, Gantt charts, and ER diagrams
+- Inline diagram editor with live preview
+- Excalidraw-style freehand drawing canvas embedded as a block
+- Export diagrams as SVG or PNG
+- Diagram templates for common use cases
+
+## Mobile & Touch Optimization
+
+- Touch-optimized floating toolbar that follows selection without obscuring content
+- Swipe gestures: swipe to indent/outdent, swipe to dismiss toolbar
+- Long-press context menu with haptic feedback integration
+- Pinch-to-zoom on images and tables
+- Mobile-first responsive toolbar: collapses into overflow menu at narrow widths
+- iOS/Android keyboard-aware layout: editor scrolls to keep caret visible above the virtual keyboard
+- Touch-friendly drag handles with larger hit targets
+
+## Keyboard-First Editing
+
+- Vim-style keybinding mode (optional) — normal, insert, visual modes
+- Emacs keybinding preset
+- Customizable keybinding map via `keyBindings` prop
+- Multi-cursor editing: `Cmd+D` to select next occurrence, `Alt+Click` to add cursors
+- Smart bracket/quote auto-pairing with wrap-selection support
+- Jump-to-heading with `Cmd+Shift+P` quick navigation
+
+## UX / UI Improvements
+
+- **Smooth animations**: toolbar transitions, modal enter/exit, block reorder animations
+- **Tooltip system**: consistent, accessible tooltips on all toolbar items with shortcut hints
+- **Focus management**: clear focus rings, trap focus in modals, restore focus on close
+- **Empty state**: configurable illustrated empty state when editor has no content
+- **Distraction-free mode**: hide all chrome (toolbar, status bar) with a fade-in on mouse move
+- **Breadcrumb bar**: show current block context (e.g., "Table > Row 2 > Cell 3" or "Blockquote > List > Item")
+- **Minimap**: optional code-editor-style minimap for long documents
+- **Split view**: side-by-side edit + preview pane for markdown or HTML source
+- **Sticky toolbar**: toolbar stays visible when scrolling long documents
+- **Inline formatting bubble**: compact floating toolbar on text selection (bold, italic, link, highlight, comment)
+- **Drag-and-drop toolbar customization**: let users rearrange toolbar buttons at runtime
+- **Color palette presets**: save and reuse custom color palettes across text and background colors
+- **Typography controls**: line height, letter spacing, paragraph spacing adjustments
+
 ## Quality Improvements
 
 - Comprehensive unit test suite (Vitest) for engine, commands, sanitizer, and converters
@@ -140,6 +295,12 @@ A living document outlining planned features, improvements, and long-term direct
 - Improved undo/redo with operation coalescing (batch rapid keystrokes into a single undo step)
 - Better large-document performance: virtualized rendering for 10k+ paragraph documents
 - Print stylesheet for clean printed output
+- Cross-browser testing matrix: Chrome, Firefox, Safari, Edge (latest 2 versions)
+- Content Security Policy (CSP) compatibility — no inline styles or eval required
+- XSS-hardened sanitizer with configurable allowlists and deny-by-default
+- Graceful degradation: core editing works without JavaScript features like Web Workers
+- Error boundaries: editor never crashes the host app — isolates and reports errors via `onError` callback
+- Automated performance benchmarks: track keystroke latency, paste speed, and render time per release
 
 ## Performance Optimizations
 
@@ -151,6 +312,13 @@ A living document outlining planned features, improvements, and long-term direct
 - Web Worker offloading for expensive operations (sanitization, markdown parsing, document conversion)
 - Profiled and optimized hot paths: keystroke handling, selection polling, content serialization
 - Lighthouse performance score target: 95+
+- Incremental DOM diffing: only re-render changed portions of the document tree
+- Idle-time processing: defer non-critical work (word count, readability scores) to `requestIdleCallback`
+- Memory pooling for frequently created/destroyed objects (selections, ranges, format state)
+- Virtualized rendering for long documents: only mount visible blocks in the DOM
+- Lazy plugin loading: plugins initialize on first use, not on editor mount
+- Compressed undo history: store diffs instead of full snapshots to reduce memory usage
+- Input batching: coalesce rapid keystrokes into single DOM updates to eliminate layout thrash
 
 ---
 
