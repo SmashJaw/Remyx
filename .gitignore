@@ -18,5 +18,5 @@ npm-debug.log*
 # Local env
 *.local
 
-.DS_Store
+# Dev Files
 dev/
